@@ -62,13 +62,13 @@ cliphist
 hyprland-plugin-hyprexpo
 ```
 
-#in bash, to find where the plugin is added, do in terminal : 
+In bash, to find where the plugin is added, do in terminal : 
 
 ```bash
 find / -name "*.so" 2>/dev/null | grep hyprexpo
 ```
 
-#path may exist as: "/usr/lib64/hyprland/libhyprexpo.so". If yes, add this as follows in hyprland.conf:
+Path may exist as: "/usr/lib64/hyprland/libhyprexpo.so". If yes, add this as follows in hyprland.conf:
 
 ```conf
 plugin = /usr/lib64/hyprland/libhyprexpo.so
