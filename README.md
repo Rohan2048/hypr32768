@@ -2,54 +2,54 @@
 Install on Fedora with: sudo dnf install -y $(grep -v '^#' requirements.txt | tr '\n' ' ') # or install via sudo dnf one by one as per the requirements
 If you use any other OS, you can still find most of the packages but additional search is required...
 
-#Core Wayland/Hyprland
+# Core Wayland/Hyprland
 hyprland
 hyprlock
 swaybg
 
-#Video Wallpaper
+# Video Wallpaper
 mpvpaper
 
-#Bar
+# Bar
 eww
 
-#Notifications
+# Notifications
 dunst
 
-#App Launcher
+# App Launcher
 rofi-wayland #or 'rofi' if rofi-wayland isn't available
 
-#Theming
+# Theming
 python3-pywal
 qt6ct
 
-#Authentication
+# Authentication
 mate-polkit
 
-#Audio/Media
+# Audio/Media
 playerctl
 pipewire-utils
 mpv
 mpv-mpris
 
-#Brightness
+# Brightness
 brightnessctl
 
-#Screenshots
+# Screenshots
 grim
 slurp
 
-#Terminal & File Manager
+# Terminal & File Manager
 konsole
 dolphin
 
-#Fonts
+# Fonts
 fontconfig
 
-#Clipboard history
+# Clipboard history
 cliphist
 
-#plugins for hyprland decorations
+# plugins for hyprland decorations
 hyprland-plugin-hyprexpo
 
 
@@ -75,11 +75,11 @@ hyprland-plugin-hyprexpo
 
 #===
 
-#thumbnail generator(for wallpapers):
+# Thumbnail generator(for wallpapers):
 ImageMagick
 
 
-#ADDITIONAL NOTES:
+# ADDITIONAL NOTES:
 
 #1)You must manually place the config folders (or create) as follows:
 #dunst: place this at ~/.config/dunst
