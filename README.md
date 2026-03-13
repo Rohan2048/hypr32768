@@ -101,7 +101,7 @@ ImageMagick
 
 # ADDITIONAL NOTES:
 
-#1)You must manually place the config folders (or create) as follows:
+1)You must manually place the config folders (or create) as follows:
 ```
 dunst: place this at ~/.config/dunst
 eww: place this at ~/.config/eww
@@ -112,9 +112,9 @@ sounds(optional, you can add your own): place this at ~/.config/sounds
 wal: place this at ~/.config/wal
 ```
 
-#2)You may need to manually find the packages incase a distro doesnt offer the exact package. Package names may differ.
+2)You may need to manually find the packages incase a distro doesnt offer the exact package. Package names may differ.
 
-#3)Things that each of the files handle:
+3)Things that each of the files handle:
 ```
 dunst: Your notification functions
 eww: The bar that can be configured as preferred and as per the eww syntax
