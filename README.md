@@ -95,8 +95,9 @@ plugins {
 ```
 
 # Thumbnail generator(for wallpapers):
+```
 ImageMagick
-
+```
 
 # ADDITIONAL NOTES:
 
