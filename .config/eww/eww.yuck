@@ -1,0 +1,207 @@
+;; --------------------------
+;; POLLS
+;; --------------------------
+
+;; Battery polls
+(defpoll BATTERY :interval "1s"
+  "cat /sys/class/power_supply/BAT0/capacity")
+
+(defpoll BATTERY_STATUS :interval "1s"
+  "cat /sys/class/power_supply/BAT0/status")
+
+(defpoll BATTERY_TIME :interval "10s" "
+  STATUS=$(cat /sys/class/power_supply/BAT0/status)
+  if command -v upower > /dev/null; then
+    BATTERY_PATH=$(upower -e | grep BAT)
+    if [ \"$STATUS\" = 'Charging' ]; then
+      TIME=$(upower -i $BATTERY_PATH | grep 'time to full' | awk '{print $4}')
+      UNIT=$(upower -i $BATTERY_PATH | grep 'time to full' | awk '{print $5}')
+    elif [ \"$STATUS\" = 'Discharging' ]; then
+      TIME=$(upower -i $BATTERY_PATH | grep 'time to empty' | awk '{print $4}')
+      UNIT=$(upower -i $BATTERY_PATH | grep 'time to empty' | awk '{print $5}')
+    fi
+
+    if [ -n \"$TIME\" ]; then
+      if [ \"$UNIT\" = 'hours' ] || [ \"$UNIT\" = 'hour' ]; then
+        HOURS=$(echo $TIME | cut -d'.' -f1)
+        DECIMAL=$(echo $TIME | cut -d'.' -f2)
+        [ -z \"$DECIMAL\" ] && DECIMAL=0
+        MINUTES=$(awk \"BEGIN {print int(0.$DECIMAL * 60)}\")
+        printf '%02d:%02d hrs' $HOURS $MINUTES
+      elif [ \"$UNIT\" = 'minutes' ] || [ \"$UNIT\" = 'minute' ]; then
+        MINUTES=$(echo $TIME | cut -d'.' -f1)
+        printf '00:%02d hrs' $MINUTES
+      else
+        echo ''
+      fi
+    else
+      echo ''
+    fi
+  else
+    echo ''
+  fi
+")
+
+(defpoll BATTERY_ICON :interval "1s" "
+  STATUS=$(cat /sys/class/power_supply/BAT0/status)
+  CAP=$(cat /sys/class/power_supply/BAT0/capacity)
+
+  NOTIFY_FILE='/tmp/battery_notify_state'
+  STATUS_FILE='/tmp/battery_status_prev'
+  CAP_FILE='/tmp/battery_cap_prev'
+
+  PREV_STATE=$(cat \"$NOTIFY_FILE\" 2>/dev/null || echo 'NONE')
+  PREV_STATUS=$(cat \"$STATUS_FILE\" 2>/dev/null || echo 'NONE')
+  PREV_CAP=$(cat \"$CAP_FILE\" 2>/dev/null || echo '0')
+
+  echo \"$STATUS\" > \"$STATUS_FILE\"
+  echo \"$CAP\" > \"$CAP_FILE\"
+
+  # Check charging FIRST
+  if [ \"$STATUS\" = 'Charging' ]; then
+     rm -f /tmp/battery_suspend_triggered
+     if [ \"$CAP\" -eq 100 ]; then
+       if [ \"$PREV_CAP\" -lt 100 ]; then
+         notify-send 'Battery Full' 'Battery at 100% - Fully charged' &
+         paplay ~/.config/sounds/battery-full.mp3 2>/dev/null &
+         echo 'FULL' > \"$NOTIFY_FILE\"
+       fi
+       echo 'FULL'
+     elif [ \"$CAP\" -ge 80 ] && [ \"$CAP\" -lt 85 ]; then
+       if [ \"$PREV_CAP\" -lt 80 ] || [ \"$PREV_STATE\" != '80PCT' ]; then
+         notify-send 'Battery 80%' \"Battery at $CAP% - Consider unplugging to preserve battery health\" &
+         paplay ~/.config/sounds/battery-full.mp3 2>/dev/null &
+         echo '80PCT' > \"$NOTIFY_FILE\"
+       fi
+       echo 'HIGH'
+     else
+       if [ \"$PREV_STATUS\" != 'Charging' ]; then
+         notify-send 'Battery Charging' \"Battery at $CAP% - Charging started\" &
+         paplay ~/.config/sounds/charging.mp3 2>/dev/null &
+       fi
+       echo 'CHG' > \"$NOTIFY_FILE\"
+       echo 'CHG'
+     fi
+  elif [ \"$CAP\" -ge 75 ]; then
+     if [ \"$PREV_STATE\" = 'LOW' ] || [ \"$PREV_STATE\" = 'CRIT' ] || [ \"$PREV_STATE\" = 'CHG' ] || [ \"$PREV_STATE\" = 'FULL' ] || [ \"$PREV_STATE\" = '80PCT' ]; then
+       echo 'NONE' > \"$NOTIFY_FILE\"
+     fi
+     echo 'HIGH'
+  elif [ \"$CAP\" -ge 20 ]; then
+     if [ \"$PREV_STATE\" = 'LOW' ] || [ \"$PREV_STATE\" = 'CRIT' ] || [ \"$PREV_STATE\" = 'CHG' ] || [ \"$PREV_STATE\" = 'FULL' ] || [ \"$PREV_STATE\" = '80PCT' ]; then
+       echo 'NONE' > \"$NOTIFY_FILE\"
+     fi
+     echo 'MED'
+  elif [ \"$CAP\" -ge 10 ]; then
+     if [ \"$PREV_CAP\" -ge 20 ] || [ \"$PREV_STATE\" != 'LOW' ]; then
+       notify-send -u critical 'Battery Low' \"Battery at $CAP%\" &
+       paplay ~/.config/sounds/battery-low.mp3 2>/dev/null &
+       echo 'LOW' > \"$NOTIFY_FILE\"
+     fi
+     echo 'LOW'
+  elif [ \"$CAP\" -le 5 ]; then
+     # Trigger suspend countdown script (only once via lock file)
+     # Script handles all notifications from here
+     if [ ! -f /tmp/battery_suspend_triggered ]; then
+       bash ~/.config/hypr/battery-suspend.sh &
+     fi
+     echo 'CRIT' > \"$NOTIFY_FILE\"
+     echo 'CRIT'
+  else
+     if [ \"$PREV_CAP\" -ge 10 ] || [ \"$PREV_STATE\" != 'CRIT' ]; then
+       notify-send -u critical 'Battery Critical' \"Battery at $CAP% - Plug in NOW!\" &
+       paplay ~/.config/sounds/battery-critical.mp3 2>/dev/null &
+       echo 'CRIT' > \"$NOTIFY_FILE\"
+     fi
+     echo 'CRIT'
+  fi
+")
+
+;; Time poll
+(defpoll TIME :interval "1s"
+  "date '+%H:%M:%S     %d-%b-%Y'")
+
+;; WiFi polls
+(defpoll WIFI_STATUS :interval "2s"
+  "nmcli -t -f WIFI g | grep -q enabled && echo 'ON' || echo 'OFF'")
+
+(defpoll WIFI_SSID :interval "2s"
+  "nmcli -t -f active,ssid dev wifi | awk -F: '/^yes/{print $2}' || echo 'Disconnected'")
+
+;; Bluetooth poll
+(defpoll BT_DISPLAY :interval "2s" "
+  if rfkill list bluetooth | grep -q 'Soft blocked: no'; then
+    DEVICE=$(pactl list cards 2>/dev/null | grep -A 20 'bluez_card' | grep 'device.description' | head -n1 | cut -d'=' -f2 | tr -d '\"' | xargs)
+    if [ -n \"$DEVICE\" ]; then
+      echo \"$DEVICE\"
+    else
+      echo 'Bluetooth-ON'
+    fi
+  else
+    echo 'Bluetooth-OFF'
+  fi
+")
+
+;; --------------------------
+;; BAR WINDOW
+;; --------------------------
+(defwindow bar-window
+  :monitor 0
+  :geometry (geometry :x "0" :y "0" :width "100%" :height "20px" :anchor "bottom center")
+  :exclusive true
+  (bar))
+
+;; --------------------------
+;; BAR WIDGET
+;; --------------------------
+(defwidget bar []
+  (box :orientation "h" :space-evenly false :halign "fill" :valign "center" :class "bar"
+
+    ;; Left side: time/date
+    (box :halign "start" :hexpand true :spacing 8
+      (label :text "${TIME}" :class "time")
+    )
+
+    ;; Center: app shortcuts
+    (box :halign "center" :hexpand true :spacing 0
+      (button :onclick "flatpak run com.brave.Browser &" :class "app"
+        (label :text "Brave"))
+      (button :onclick "flatpak run com.brave.Browser https://web.whatsapp.com &" :class "app"
+        (label :text "WhatsApp"))
+      (button :onclick "flatpak run com.brave.Browser https://www.notion.so &" :class "app"
+        (label :text "Notion"))
+      (button :onclick "flatpak run com.brave.Browser https://www.chatgpt.com &" :class "app"
+        (label :text "ChatGPT"))
+      (button :onclick "flatpak run com.brave.Browser https://www.udemy.com &" :class "app"
+        (label :text "Udemy"))
+    )
+
+    ;; Right side: WiFi + Bluetooth + Battery
+    (box :halign "end" :hexpand true :spacing 8
+
+      ;; WiFi section
+      (box :spacing 2 :class "tray-section"
+        (button :onclick "nmcli radio wifi $([ \"${WIFI_STATUS}\" = \"ON\" ] && echo off || echo on)"
+                :class "tray-btn-compact"
+          (label :text "Wi-Fi-${WIFI_STATUS}" :class "tray")
+        )
+        (label :text "${WIFI_SSID}" :class "tray")
+      )
+
+      ;; Bluetooth section
+      (box :spacing 2 :class "tray-section"
+        (button :onclick "rfkill toggle bluetooth"
+                :class "tray-btn-compact"
+          (label :text "${BT_DISPLAY}" :class "tray")
+        )
+      )
+
+      ;; Battery section
+      (box :spacing 2 :class "tray-section"
+        (label :text "BAT-${BATTERY_ICON}" :class "tray")
+        (label :text "${BATTERY}%" :class "tray")
+        (label :text "${BATTERY_TIME}" :class "tray" :visible "${BATTERY_TIME != ''}")
+      )
+    )
+  )
+)

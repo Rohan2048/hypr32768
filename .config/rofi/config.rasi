@@ -1,0 +1,88 @@
+@import "~/.cache/wal/colors-rofi.rasi"
+
+configuration {
+    modi:       "drun";
+    show-icons: true;
+}
+
+* {
+    window-bg-color:       rgba(11, 18, 26, 0.75);
+    selected-bg-color:     rgba(255, 255, 255, 0.15);
+    unselected-bg-color:   transparent;
+    selected-text-color:   rgba(255, 255, 255, 1);
+    unselected-text-color: rgba(255, 255, 255, 0.85);
+}
+
+window {
+    width:            40%;
+    height:           60%;
+    border:           0px;
+    border-radius:    12px;
+    background-color: @window-bg-color;
+}
+
+mainbox {
+    background-color: transparent;
+    children:         [ inputbar, listview ];
+}
+
+inputbar {
+    background-color: transparent;
+    children:         [ entry ];
+    padding:          12px;
+    border:           0px;
+}
+
+prompt, entry, case-indicator {
+    background-color: transparent;
+    text-color:       rgba(255, 255, 255, 1);
+}
+
+listview {
+    background-color: transparent;
+    border:           0px;
+    padding:          8px;
+    spacing:          4px;
+}
+
+scrollbar {
+    background-color: transparent;
+    handle-color:     rgba(255, 255, 255, 0.2);
+}
+
+element {
+    background-color: @unselected-bg-color;
+    text-color:       @unselected-text-color;
+    padding:          8px 12px;
+    border-radius:    8px;
+}
+
+entry {
+    background-color: transparent;
+    text-color:       rgba(255, 255, 255, 1);
+    placeholder:      "Search...";
+}
+
+element selected {
+    background-color: @selected-bg-color;
+    text-color:       @selected-text-color;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+}
+
+window {
+    border:           0px solid;
+    border-radius:    12px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+prompt {
+    enabled: false;
+}
+
+case-indicator {
+    enabled: false;
+}
