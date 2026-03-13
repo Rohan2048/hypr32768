@@ -62,16 +62,16 @@ hyprland-plugin-hyprexpo
 
 #you can also add under hyprland.conf:
 
-#plugins {
-    #hyprexpo {
-    #columns = 3
-    #gap_size = 5
-    #bg_col = rgb(111111)
-    #workspace_method = center current
-    #enable_gesture = false
-    #gesture_distance = 300
-    #}
-#}
+plugins {
+    hyprexpo {
+    columns = 3
+    gap_size = 5
+    bg_col = rgb(111111)
+    workspace_method = center current
+    enable_gesture = false
+    gesture_distance = 300
+    }
+}
 
 #===
 
