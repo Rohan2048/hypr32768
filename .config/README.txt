@@ -39,10 +39,6 @@ brightnessctl
 grim
 slurp
 
-# Terminal & File Manager
-konsole
-dolphin
-
 # Fonts
 fontconfig
 
