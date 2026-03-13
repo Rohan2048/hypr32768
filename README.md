@@ -49,7 +49,7 @@ fontconfig
 # Clipboard history
 cliphist
 
-# plugins for hyprland decorations
+# Plugins for hyprland decorations
 hyprland-plugin-hyprexpo
 
 
@@ -62,11 +62,11 @@ hyprland-plugin-hyprexpo
 
 # You can also add under hyprland.conf:
 
-plugins {
-    hyprexpo {
-    columns = 3
-    gap_size = 5
-    bg_col = rgb(111111)
+plugins { \n
+    hyprexpo { \n
+    columns = 3 \n
+    gap_size = 5 \n
+    bg_col = rgb(111111) \n
     workspace_method = center current
     enable_gesture = false
     gesture_distance = 300
