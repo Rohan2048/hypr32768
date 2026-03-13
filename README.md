@@ -1,4 +1,4 @@
-#Hyprland Setup Requirements
+# Hyprland Setup Requirements
 Install on Fedora with: sudo dnf install -y $(grep -v '^#' requirements.txt | tr '\n' ' ') # or install via sudo dnf one by one as per the requirements
 If you use any other OS, you can still find most of the packages but additional search is required...
 
