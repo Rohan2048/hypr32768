@@ -60,7 +60,7 @@ hyprland-plugin-hyprexpo
 
 #bind = $mainMod, tab, hyprexpo:expo, toggle
 
-#you can also add under hyprland.conf:
+# You can also add under hyprland.conf:
 
 plugins {
     hyprexpo {
@@ -73,7 +73,6 @@ plugins {
     }
 }
 
-#===
 
 # Thumbnail generator(for wallpapers):
 ImageMagick
