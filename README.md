@@ -1,8 +1,8 @@
-# Hyprland Setup Requirements
-# Install on Fedora with: sudo dnf install -y $(grep -v '^#' requirements.txt | tr '\n' ' ') # or install via sudo dnf one by one as per the requirements
-#If you use any other OS, you can still find most of the packages but additional search is required...
+#Hyprland Setup Requirements
+Install on Fedora with: sudo dnf install -y $(grep -v '^#' requirements.txt | tr '\n' ' ') # or install via sudo dnf one by one as per the requirements
+If you use any other OS, you can still find most of the packages but additional search is required...
 
-# Core Wayland/Hyprland
+#Core Wayland/Hyprland
 hyprland
 hyprlock
 swaybg
@@ -10,70 +10,70 @@ swaybg
 #Video Wallpaper
 mpvpaper
 
-# Bar
+#Bar
 eww
 
-# Notifications
+#Notifications
 dunst
 
-# App Launcher
+#App Launcher
 rofi-wayland #or 'rofi' if rofi-wayland isn't available
 
-# Theming
+#Theming
 python3-pywal
 qt6ct
 
-# Authentication
+#Authentication
 mate-polkit
 
-# Audio/Media
+#Audio/Media
 playerctl
 pipewire-utils
 mpv
 mpv-mpris
 
-# Brightness
+#Brightness
 brightnessctl
 
-# Screenshots
+#Screenshots
 grim
 slurp
 
-# Terminal & File Manager
+#Terminal & File Manager
 konsole
 dolphin
 
-# Fonts
+#Fonts
 fontconfig
 
-# Clipboard history
+#Clipboard history
 cliphist
 
 #plugins for hyprland decorations
-hyprland-plugin-hyprexpo(yes, install via dnf)
-===
+hyprland-plugin-hyprexpo
 
-find / -name "*.so" 2>/dev/null | grep hyprexpo
-# path may exist as: "/usr/lib64/hyprland/libhyprexpo.so". Add this as follows in hyprland.conf:
 
-plugin = /usr/lib64/hyprland/libhyprexpo.so
+#in bash, to find where the plugin is added, do in terminal : 'find / -name "*.so" 2>/dev/null | grep hyprexpo'
+#path may exist as: "/usr/lib64/hyprland/libhyprexpo.so". Add this as follows in hyprland.conf:
 
-bind = $mainMod, tab, hyprexpo:expo, toggle
+#plugin = /usr/lib64/hyprland/libhyprexpo.so
+
+#bind = $mainMod, tab, hyprexpo:expo, toggle
 
 #you can also add under hyprland.conf:
 
-plugins {
-    hyprexpo {
-    columns = 3
-    gap_size = 5
-    bg_col = rgb(111111)
-    workspace_method = center current
-    enable_gesture = false
-    gesture_distance = 300
-    }
-}
+#plugins {
+    #hyprexpo {
+    #columns = 3
+    #gap_size = 5
+    #bg_col = rgb(111111)
+    #workspace_method = center current
+    #enable_gesture = false
+    #gesture_distance = 300
+    #}
+#}
 
-===
+#===
 
 #thumbnail generator(for wallpapers):
 ImageMagick
