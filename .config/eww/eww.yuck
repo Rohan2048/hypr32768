@@ -119,7 +119,7 @@
 
 ;; Time poll
 (defpoll TIME :interval "1s"
-  "date '+%H:%M:%S     %d-%b-%Y'")
+  "date '+%H:%M     %d-%b-%Y'")
 
 ;; WiFi polls
 (defpoll WIFI_STATUS :interval "2s"
@@ -170,8 +170,8 @@
         (label :text "WhatsApp"))
       (button :onclick "flatpak run com.brave.Browser https://www.notion.so &" :class "app"
         (label :text "Notion"))
-      (button :onclick "flatpak run com.brave.Browser https://www.chatgpt.com &" :class "app"
-        (label :text "ChatGPT"))
+      (button :onclick "flatpak run com.brave.Browser https://www.claude.com &" :class "app"
+        (label :text "Claude"))
       (button :onclick "flatpak run com.brave.Browser https://www.udemy.com &" :class "app"
         (label :text "Udemy"))
     )

@@ -4,7 +4,7 @@
 
     width = (0, 400)
     height = 300
-    origin = top-right
+    origin = top-center
     offset = 20x20
 
     progress_bar = true
@@ -23,7 +23,7 @@
     line_height = 0
     markup = full
     format = "<b>%s</b>\n%b"
-    alignment = left
+    alignment = center
     vertical_alignment = center
 
     icon_position = left

@@ -19,7 +19,7 @@ if [ $NEED_GENERATION -eq 1 ]; then
     notify-send "Wallpaper Selector" "Generating thumbnails, please wait..."
 fi
 
-# Generate thumbnails
+# Generate high-quality thumbnails - preserve aspect ratio strictly
 for img in "$WALLPAPER_DIR"/*; do
     filename=$(basename "$img")
     thumb="$THUMB_DIR/${filename}.png"
@@ -45,7 +45,7 @@ for img in "$WALLPAPER_DIR"/*; do
     printf " \0icon\x1f%s\n" "$thumb" >> "$TEMP_FILE"
 done
 
-# Show in rofi
+# Show in rofi - 1 row, adaptive width
 SELECTED_INDEX=$(cat "$TEMP_FILE" | rofi -dmenu -i \
     -show-icons \
     -theme-str 'inputbar { enabled: false; }' \
@@ -58,34 +58,43 @@ SELECTED_INDEX=$(cat "$TEMP_FILE" | rofi -dmenu -i \
 
 rm "$TEMP_FILE"
 
+# Exit if nothing selected
 [ -z "$SELECTED_INDEX" ] && { rm "$TEMP_MAP"; exit 0; }
 
+# Get filename from index
 SELECTED=$(grep "^$SELECTED_INDEX:" "$TEMP_MAP" | cut -d: -f2)
 rm "$TEMP_MAP"
 
 WALLPAPER_PATH="$WALLPAPER_DIR/$SELECTED"
 
+# Update shellwrapper
 sed -i "s|^WALLPAPER=.*|WALLPAPER=\"$WALLPAPER_PATH\"|" ~/.config/hypr/shellwrapper.sh
 
 source ~/.bashrc
 
-wal -i "$WALLPAPER_PATH"
+# Generate Pywal colors
+/home/rohan/.local/bin/wal -i "$WALLPAPER_PATH"
 
 sleep 2
 
+# Set wallpaper
 killall swaybg 2>/dev/null
 swaybg -i "$WALLPAPER_PATH" -m fill &
 
+# Restart dunst with new colors
 killall dunst 2>/dev/null
 dunst &
 
+# Force eww to reload CSS
 touch ~/.config/eww/eww.scss
 
+# Restart eww
 killall -9 eww 2>/dev/null
 eww daemon
 sleep 1
 eww open bar-window
 
+# Reload Hyprland
 hyprctl reload
 
 notify-send "Wallpaper Changed" "Applied $SELECTED!"

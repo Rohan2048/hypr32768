@@ -1,7 +1,6 @@
-```bash
 #!/bin/bash
 
-PLAY="$HOME/Downloads/MISC/MUSIC/"
+PLAY="/home/rohan/Downloads/MISC/MUSIC/"
 FIRST_RUN="/tmp/autoplay_first_run"
 WATCHER_PID="/tmp/autoplay_watcher_pid"
 
@@ -10,7 +9,7 @@ if pgrep -x "mpv" > /dev/null; then
     [ -f "$WATCHER_PID" ] && kill $(cat "$WATCHER_PID") 2>/dev/null && rm -f "$WATCHER_PID"
     notify-send -h string:x-dunst-stack-tag:music-now-playing "Music" "Stopped"
 else
-    mpv --loop-playlist --no-video --volume=100 --input-ipc-server=/tmp/mpvsocket "$PLAY" &
+    mpv --loop-playlist --no-video --volume=60 --input-ipc-server=/tmp/mpvsocket "$PLAY" &
     if [ ! -f "$FIRST_RUN" ]; then
         touch "$FIRST_RUN"
     else
@@ -30,4 +29,3 @@ else
     ) &
     echo $! > "$WATCHER_PID"
 fi
-```
