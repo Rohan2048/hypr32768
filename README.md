@@ -188,3 +188,26 @@ Volume/Brightness keys — Self explanatory(the usual keys to adjust volume and 
 Additionally, in ```hypr.conf```(in ```~/.config/hypr```), ```Super``` is defined as a variable ```$mainMod```.
 
 10) The file manager and the terminal can anyways be adjusted as preference.
+
+
+# Using schedule_action.sh(under ~/.config/hypr/):
+## Steps
+1. Install `at`:
+2. Enable and start the daemon:
+   `sudo systemctl enable atd && sudo systemctl start atd`
+3. Add NOPASSWD rule via `sudo visudo`:
+   - Fedora/RHEL/Arch/openSUSE:
+     ```
+     %wheel ALL=(ALL) NOPASSWD: /usr/bin/systemctl suspend, /usr/bin/systemctl poweroff, /usr/bin/systemctl reboot
+     ```
+   - Ubuntu/Debian:
+     ```
+     %sudo ALL=(ALL) NOPASSWD: /usr/bin/systemctl suspend, /usr/bin/systemctl poweroff, /usr/bin/systemctl reboot
+     ```
+
+### Usage
+Press `Super + Shift + Escape` to open the scheduler.
+1. Choose action: Shutdown, Suspend, or Reboot
+2. Enter time in HH:MM format (24hr)
+3. System will notify 2 minutes and 1 minute before executing
+4. Use "Cancel Scheduled" to cancel any pending action
