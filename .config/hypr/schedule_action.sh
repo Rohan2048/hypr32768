@@ -40,7 +40,7 @@ case "$ACTION" in
     "Suspend")
         echo "$DBUS notify-send -u critical 'Scheduled Suspend' 'System will suspend in 2 minutes'" | at "$TIME" - 2 minutes
         echo "$DBUS notify-send -u critical 'Scheduled Suspend' 'System will suspend in 1 minute'" | at "$TIME" - 1 minute
-        echo "sudo systemctl suspend" | at "$TIME"
+        echo "hyprlock & sudo systemctl suspend" | at "$TIME"
         ;;
     "Reboot")
         echo "$DBUS notify-send -u critical 'Scheduled Reboot' 'System will reboot in 2 minutes'" | at "$TIME" - 2 minutes
